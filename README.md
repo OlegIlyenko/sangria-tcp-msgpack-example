@@ -10,7 +10,7 @@ If you would like to experiment and change code yourself, then better alternativ
 
 ### Motivation & Protocol
 
-GraphQL claims to be transport and data format agnostic. At least this is what everybody says (including myself). Time to prove this theory and implement something different from boring HTTP and JSON :)
+GraphQL claims to be transport and data format agnostic. At least this is what everybody says (including myself). It's time to prove this theory and implement something different from boring HTTP and JSON :)
 
 This example uses binary protocol [MessagePack](http://msgpack.org/) and exposes GraphQL query engine via raw TCP connection. Some important points about the protocol and data the format:
 
