@@ -162,7 +162,7 @@ object ServerAndClient extends App {
       .to(Sink.foreach{ x ⇒
         val unpacker = MessagePack.newDefaultUnpacker(x.drop(4).toByteBuffer.array)
 
-        println("Server Response " + unpacker.unpackValue().toJson)
+        println("Server Response (converted to json for human beings) " + unpacker.unpackValue().toJson)
       })
 
     Tcp().outgoingConnection("127.0.0.1", 3000)
