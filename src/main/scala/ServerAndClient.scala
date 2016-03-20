@@ -6,11 +6,12 @@ import akka.stream.io.Framing
 import akka.stream.scaladsl._
 import akka.stream.scaladsl.Tcp.{ServerBinding, IncomingConnection}
 import akka.util.ByteString
+
 import org.msgpack.core.MessagePack
 import org.msgpack.value.{ValueFactory ⇒ VF, Value, NilValue, StringValue, MapValue}
 
 import sangria.parser.QueryParser
-import sangria.execution.Executor
+import sangria.execution.{ErrorWithResolver, Executor}
 import sangria.marshalling.msgpack._
 
 import scala.concurrent.Future
@@ -28,10 +29,13 @@ object ServerAndClient extends App {
       QueryParser.parse(query) match {
         case Success(queryAst) ⇒
           Executor.execute(SchemaDefinition.StarWarsSchema, queryAst,
-            operationName = operation,
-            variables = vars,
-            userContext = new CharacterRepo,
-            deferredResolver = new FriendsResolver)
+              operationName = operation,
+              variables = vars,
+              userContext = new CharacterRepo,
+              deferredResolver = new FriendsResolver)
+            .recover {
+              case error: ErrorWithResolver ⇒ error.resolveError
+            }
 
         case Failure(error) ⇒
           Future.successful(
